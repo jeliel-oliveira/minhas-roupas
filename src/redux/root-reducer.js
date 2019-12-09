@@ -10,7 +10,7 @@ import shopReducer from './shop/shop.reducer';
 const persistConfig = {
     key: 'root',
     storage, 
-    whitelist: ['cart']
+    whitelist: ['cart'] //O reducer que eu quero manter apenas
 }
 const rootReducer = combineReducers({
     user: userReducer,

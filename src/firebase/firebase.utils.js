@@ -28,6 +28,38 @@ export const signInWithGoogle = () => auth.signInWithPopup(provider);
 
 export default firebase;
 
+export const convertCollectionsSnapshotToMap = (collections)=>{
+    const transformedCollections = collections.docs.map(
+      doc => {
+        const { title, items } = doc.data();
+        return { routeName: encodeURI(title.toLowerCase()),
+          id: doc.id,
+          title,
+          items
+        }
+      }
+    )
+    return transformedCollections.reduce((accumulator, collection)=>{
+      accumulator[collection.title.toLowerCase()] = collection;
+      return accumulator;
+    },{})
+}
+/*
+//Padrão para adicionar diversos objetos ao firestore
+export const addCollectionAndItems = async (collectionKey, objectsToAdd) => {
+  //cria uma referencia doc
+  const collectionRef = firestore.collection(collectionKey);
+  //cria um batch
+  const batch = firestore.batch();
+
+  objectsToAdd.forEach(obj => {
+    const newDocRef = collectionRef.doc();
+    batch.set(newDocRef, obj);
+  })
+  //faz a requisição do batch
+  return (await batch.commit());
+}*/
+
 export const createUserProfileDocument = async (userAuth, additionalData)=>{
     if(!userAuth){
         return;
@@ -48,6 +80,6 @@ export const createUserProfileDocument = async (userAuth, additionalData)=>{
             console.log('error creating user ', error.message);
         }
     }
-    
+
     return userRef;
 }
